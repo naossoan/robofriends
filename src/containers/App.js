@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import { render } from 'react-dom'
-import CardList from './CardList'
-import { robots } from './robots'
-import SearchBox from './SearchBox'
+import CardList from '../components/CardList'
+// import { robots } from './robots'
+import SearchBox from '../components/SearchBox'
 import AppCSS from './App.css'
+import Scroll from '../components/Scroll'
+import ErrorBoundary from '../components/ErrorBoundary'
+//
 
 // STATE it's simply an object that describes the entire application. In this case it will be the value of the search box, and the robots.
 // STATE >> props
@@ -12,11 +15,17 @@ import AppCSS from './App.css'
 class App extends Component {
   constructor() {
     super()
-    // these are the things that describe the app. They can change and be dynamic.
+    // these are the things that describe the app. They can change and can be dynamic.
     this.state = {
-      robots: robots,
+      robots: [],
       searchfield: '',
     }
+  }
+
+  componentDidMount() {
+    fetch('https://jsonplaceholder.typicode.com/users') //grab the users from this link, convert to json, and make the STATE 'robots' = these users.
+      .then(response => response.json())
+      .then(users => this.setState({ robots: users }))
   }
 
   onSearchChange = event => {
@@ -26,21 +35,26 @@ class App extends Component {
   }
 
   render() {
-    const filteredRobots = this.state.robots.filter(robots => {
-      return robots.name
-        .toLowerCase()
-        .includes(this.state.searchfield.toLowerCase())
+    const { robots, searchfield } = this.state
+
+    const filteredRobots = robots.filter(robot => {
+      return robot.name.toLowerCase().includes(searchfield.toLowerCase())
     })
-    // console.log(filteredRobots)
-    return (
+
+    return !robots.length ? (
+      <h1>Loading...</h1>
+    ) : (
       <div className='tc'>
         <img
           src='https://fontmeme.com/permalink/201202/2b05458e27d8a5df9a4b631e27c77ef9.png'
           width='400px'
         />
         <SearchBox searchChange={this.onSearchChange} />
-
-        <CardList robots={filteredRobots} />
+        <Scroll>
+          <ErrorBoundary>
+            <CardList robots={filteredRobots} />
+          </ErrorBoundary>
+        </Scroll>
       </div>
     )
   }

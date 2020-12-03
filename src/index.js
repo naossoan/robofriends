@@ -1,8 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import './index.css'
-
-import App from './App' //grab the cardlist file
+import App from './containers/App' //grab the main app file
 import { robots } from './robots' //grab all the robots from the robots file
 import 'tachyons'
 import reportWebVitals from './reportWebVitals'

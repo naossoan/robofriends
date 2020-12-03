@@ -1,6 +1,7 @@
 import React from 'react'
 import Card from './Card'
-import { robots } from './robots'
+import { robots } from '../robots'
+import ErrorBoundary from './ErrorBoundary'
 
 const CardList = ({ robots }) => {
   return (
